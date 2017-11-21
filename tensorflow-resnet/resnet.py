@@ -301,7 +301,7 @@ def _get_variable(name,
         regularizer = tf.contrib.layers.l2_regularizer(weight_decay)
     else:
         regularizer = None
-    collections = [tf.GraphKeys.VARIABLES, RESNET_VARIABLES]
+    collections = [tf.GraphKeys.GLOBAL_VARIABLES, RESNET_VARIABLES]
     return tf.get_variable(name,
                            shape=shape,
                            initializer=initializer,

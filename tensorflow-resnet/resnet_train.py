@@ -66,11 +66,11 @@ def train(is_training, logits, images, labels):
     batchnorm_updates_op = tf.group(*batchnorm_updates)
     train_op = tf.group(apply_gradient_op, batchnorm_updates_op)
 
-    saver = tf.train.Saver(tf.all_variables())
+    saver = tf.train.Saver(tf.global_variables())
 
     summary_op = tf.summary.merge_all()
 
-    init = tf.initialize_all_variables()
+    init = tf.global_variables_initializer()
 
     sess = tf.Session(config=tf.ConfigProto(log_device_placement=False))
     sess.run(init)

@@ -254,11 +254,11 @@ def convert(graph, img, img_p, layers):
     # The checkpoint is written to at the end.
     tf.train.export_meta_graph(filename=meta_fn(layers))
 
-    vars_to_restore = tf.all_variables()
+    vars_to_restore = tf.global_variables()
     saver = tf.train.Saver(vars_to_restore)
 
     sess = tf.Session()
-    sess.run(tf.initialize_all_variables())
+    sess.run(tf.global_variables_initializer())
 
     assigns = []
     for var in vars_to_restore:
