@@ -2,14 +2,14 @@
 import cv2
 import numpy as np
 
-print(u'ÕıÔÚ´¦ÀíÖĞ')
+print(u'æ­£åœ¨å¤„ç†ä¸­')
 w_fg = 32
 h_fg = 18
 picflag = 3
 
 
 def readpic(fn):
-    # ·µ»ØÍ¼ÏñÌØÕ÷Âë
+    # è¿”å›å›¾åƒç‰¹å¾ç 
     fnimg = cv2.imread(fn) #read_path
     img = cv2.resize(fnimg,(1280,720))
     w = img.shape[1]
@@ -33,7 +33,7 @@ def readpic(fn):
             alltz[2].append(rtz)
     return alltz
 
-
+# è®¡ç®—ä½™å¼¦ç›¸ä¼¼åº¦
 def get_cossimi(x,y):
     myx = np.array(x)
     myy = np.array(y)
@@ -41,35 +41,33 @@ def get_cossimi(x,y):
     cos21 = np.sqrt(sum(myx*myx))
     cos22 = np.sqrt(sum(myy*myy))
     return cos1/float(cos21*cos22)
-
-# xºÍdÑù±¾³õÊ¼»¯
-
+Â 
+#Â ä¸»ç¨‹åº
 if __name__ == '__main__':
-# ¶ÁÈ¡Í¼Ïñ£¬ÌáÈ¡Ã¿ÀàÍ¼ÏñµÄÌØÕ÷
-# ¼ÆËãÀà±ğÌØÕ÷Âë£¬Í¨¹ıÃ¿¸öÀà±ğËùÓĞÑù±¾µÄÇøÓòÌØÕ÷µÄÆ½¾ùÖµ£¬ÌáÈ¡Àà±ğÌØÕ÷
-    ii=1 #³õÊ¼»¯
+# åˆå§‹åŒ–å›¾ç‰‡ç¼–å·
+    ii=1 #åˆå§‹åŒ–å›¾ç‰‡ç¼–å·
     jj=2
     while True:
-        fn1 ='E:\DeepLearning\PigRecog\save\pig1\p1_'+ str(ii) +'.jpeg'##ÇëÊÖ¹¤ĞŞ¸ÄÄ¿Â¼
+        fn1 ='E:\DeepLearning\PigRecog\save\pig1\p1_'+ str(ii) +'.jpeg'##è¯»å–ç¬¬ä¸€å¼ å›¾ç‰‡ï¼Œè¯·æ‰‹å·¥ä¿®æ”¹ç›®å½•
         mytz= np.array(readpic(fn1))
-        train_x=mytz[0].tolist()+mytz[1].tolist() + mytz[2].tolist()
-
-        # ¼ÆËã´ı·ÖÀàÍ¼ÏñµÄÌØÕ÷ÂëÓëÃ¿¸öÀà±ğÌØÕ÷ÂëÖ®¼äµÄÓàÏÒ¾àÀë£¬¾àÀë×î´óÕßÎªÍ¼ÏñËùÊô·ÖÀà
-        fn2 = 'E:\DeepLearning\PigRecog\save\pig1\p1_'+ str(jj) +'.jpeg'##ÇëÊÖ¹¤ĞŞ¸ÄÄ¿Â¼
+        train_x=mytz[0].tolist()+mytz[1].tolist() + mytz[2].tolist() #è®¡ç®—ç‰¹å¾å€¼
+Â 
+        # è®¡ç®—å¾…åˆ†ç±»å›¾åƒçš„ç‰¹å¾ç ä¸æ¯ä¸ªå›¾ç‰‡ä¹‹é—´çš„ä½™å¼¦è·ç¦»ï¼Œä½™å¼¦å€¼è¶Šå¤§ç›¸ä¼¼åº¦è¶Šé«˜
+        fn2 = 'E:\DeepLearning\PigRecog\save\pig1\p1_'+ str(jj) +'.jpeg'##è¯»å–ç¬¬äºŒå¼ å›¾ç‰‡ï¼Œå’Œç¬¬ä¸€å¼ æ¯”è¾ƒï¼Œè¯·æ‰‹å·¥ä¿®æ”¹ç›®å½•
         testtz = np.array(readpic(fn2))
         simtz = testtz[0].tolist() + testtz[1].tolist() + testtz[2].tolist()
-        maxtz = 0.95 #ÉèÖÃÏàËÆ¶ÈãĞÖµ¹ıÂËÍ¼Æ¬
+        maxtz = 0.95 #è®¾ç½®ç›¸ä¼¼åº¦é˜ˆå€¼è¿‡æ»¤å›¾ç‰‡
         nowi = 0
         nowsim = get_cossimi(train_x, simtz)
         print(nowsim)
-        if nowsim<maxtz: #ÏàËÆ¶ÈĞ¡Ê±±£´æÍ¼Æ¬£¬²¢¸üĞÂ»ù×¼Í¼Æ¬
+        if nowsim<maxtz: #ç›¸ä¼¼åº¦å°æ—¶ä¿å­˜å›¾ç‰‡ï¼Œå¹¶æ›´æ–°åŸºå‡†å›¾ç‰‡
             maxtz = nowsim
             nowi = 1
             im = cv2.imread(fn2)
-            path2='E:\DeepLearning\PigRecog\save\pig1\pfilter\\pf1_'+ str(jj) +'.jpeg'##ÇëÊÖ¹¤´´½¨¹ıÂËÍ¼Æ¬±£´æÄ¿Â¼
+            path2='E:\DeepLearning\PigRecog\save\pig1\pfilter\\pf1_'+ str(jj) +'.jpeg'##è¯·æ‰‹å·¥åˆ›å»ºè¿‡æ»¤å›¾ç‰‡ä¿å­˜ç›®å½•
             cv2.imwrite(path2,im)
             ii=jj
             jj=jj+1
-        else:   #ÏàËÆ¶È´óÊ±¸üĞÂ±È½ÏÍ¼Æ¬
+        else:   #ç›¸ä¼¼åº¦å¤§æ—¶æ›´æ–°æ¯”è¾ƒå›¾ç‰‡
             jj=jj+1
-        print(u'%s ÊôÓÚµÚ %d Àà' % (fn2,nowi+1))
+        print(u'%s å±äºç¬¬ %d ç±»' % (fn2,nowi+1))
