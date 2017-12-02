@@ -47,20 +47,27 @@ def _preprocess_single_pic(src_path,  dst_path, data_plus, train):
         img = imread(src_path)
 
         if train == True:
-            for i in range(data_plus):
-                #只进行随机裁剪
-                processed_img = random_size_process(img)
-                #处理尺寸到不拉伸的正方形
-                resize = min(processed_img.eval().shape[0], processed_img.eval().shape[1])
-                processed_img = tf.image.resize_image_with_crop_or_pad(processed_img, resize, resize)
+            if img.shape[0] > 299 and img.shape[1] > 299:
+                for i in range(data_plus):
+                    #只进行随机裁剪
+                    processed_img = random_size_process(img)
+                    #处理尺寸到不拉伸的正方形
+                    encoded_image = tf.image.encode_jpeg(processed_img)
+                    with tf.gfile.GFile(dst_path + str(i) + ".jpg", "wb") as f:
+                        f.write(encoded_image.eval())
+            else:
+                resize = min(img.shape[0], img.shape[1])
+                resize = max(resize, 299)
+                processed_img = tf.image.resize_image_with_crop_or_pad(img, resize, resize)
                 processed_img = tf.image.resize_images(processed_img, [299, 299], method = 1)
                 encoded_image = tf.image.encode_jpeg(processed_img)
-                with tf.gfile.GFile(dst_path + str(i) + ".jpg", "wb") as f:
+                with tf.gfile.GFile(dst_path + ".jpg", "wb") as f:
                     f.write(encoded_image.eval())
         else:
             #非训练集 只调整尺寸
             # 调整到不拉伸的正方形（裁剪长边，损失部分图像）
             resize = min(img.shape[0], img.shape[1])
+            resize = max(resize, 299) 
             processed_img = tf.image.resize_image_with_crop_or_pad(img, resize, resize)
             processed_img = tf.image.resize_images(processed_img, [299, 299], method = 1)
             encoded_image = tf.image.encode_jpeg(processed_img)
@@ -134,11 +141,7 @@ def random_pos_process(image):
 ### 尺寸随机处理
 
 def random_size_process(image):
-    # 范围
-    bbox = tf.constant([0.0, 0.0, 1.0, 1.0], dtype = tf.float32, shape = [1, 1, 4])
-    # 随机生成裁剪范围
-    bbox_begin, bbox_size, _ = tf.image.sample_distorted_bounding_box(tf.shape(image), bounding_boxes = bbox)
-    # 裁剪
-    croped_image = tf.slice(image, bbox_begin, bbox_size)
-#    croped_image = tf.image.resize_image_with_crop_or_pad(croped_image, out_w, out_h)
+    # 范围 必须大于 299 299
+    croped_image = tf.random_crop(image, [299, 299, 3])
     return croped_image
+
