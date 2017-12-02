@@ -6,6 +6,7 @@ import os
 from os.path import isfile, isdir
 import csv
 import glob
+import matplotlib.pyplot as plt
 
 
 # synset = [l.strip() for l in open('synset.txt').readlines()]
@@ -92,7 +93,7 @@ def make_csv_file(output_csv_path, testA_dir, test_preds):
                 class_prob = as_num(probability)
                 writer.writerow([pic_num, str(class_num), str(class_prob)])
 
-def run_model(testA_dir, model):
+def run_model(testA_dir, model, pic_class):
     testA_files = read_pic_name(testA_dir)
     test_preds = []
     batch = []
@@ -107,7 +108,7 @@ def run_model(testA_dir, model):
             test_preds.append(model.predict(np.array(batch)))
             batch = []
             print('{} images processed'.format(ii))
-    return np.array(test_preds).reshape(3000, 30)
+    return np.array(test_preds).reshape(len(testA_files), pic_class)
 
 def accuracy_curve(h):
     acc, loss, val_acc, val_loss = h.history['acc'], h.history['loss'], h.history['val_acc'], h.history['val_loss']
