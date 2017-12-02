@@ -52,7 +52,8 @@ def _preprocess_single_pic(src_path,  dst_path, data_plus, train):
                 processed_img = random_size_process(img)
                 #处理尺寸到不拉伸的正方形
                 resize = min(processed_img.eval().shape[0], processed_img.eval().shape[1])
-                processed_img = tf.image.resize_images(processed_img, [resize, resize], method = 1)
+                processed_img = tf.image.resize_image_with_crop_or_pad(processed_img, resize, resize)
+                processed_img = tf.image.resize_images(processed_img, [299, 299], method = 1)
                 encoded_image = tf.image.encode_jpeg(processed_img)
                 with tf.gfile.GFile(dst_path + str(i) + ".jpg", "wb") as f:
                     f.write(encoded_image.eval())
@@ -60,7 +61,8 @@ def _preprocess_single_pic(src_path,  dst_path, data_plus, train):
             #非训练集 只调整尺寸
             # 调整到不拉伸的正方形（裁剪长边，损失部分图像）
             resize = min(img.shape[0], img.shape[1])
-            processed_img = tf.image.resize_images(img, [resize, resize], method = 1)
+            processed_img = tf.image.resize_image_with_crop_or_pad(img, resize, resize)
+            processed_img = tf.image.resize_images(processed_img, [299, 299], method = 1)
             encoded_image = tf.image.encode_jpeg(processed_img)
             with tf.gfile.GFile(dst_path + ".jpg", "wb") as f:
                 f.write(encoded_image.eval())
